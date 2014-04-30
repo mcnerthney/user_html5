@@ -291,7 +291,7 @@ module.exports = function ( grunt ) {
 
     /**
      * `coffeelint` does the same as `jshint`, but for CoffeeScript.
-     * CoffeeScript is not the default in ngBoilerplate, so we're just using
+     * CoffeeScript is not the default in ngZoute, so we're just using
      * the defaults here.
      */
     coffeelint: {
@@ -541,7 +541,7 @@ module.exports = function ( grunt ) {
    * before watching for changes.
    */
   grunt.renameTask( 'watch', 'delta' );
-  grunt.registerTask( 'watch', [ 'build', 'karma:unit', 'delta' ] );
+  grunt.registerTask( 'watch', [ 'build',  'delta' ] );
 
   /**
    * The default task is to build and compile.
@@ -554,8 +554,7 @@ module.exports = function ( grunt ) {
   grunt.registerTask( 'build', [
     'clean', 'html2js', 'jshint', 'coffeelint', 'coffee', 'less:build',
     'concat:build_css', 'copy:build_app_assets', 'copy:build_vendor_assets',
-    'copy:build_appjs', 'copy:build_vendorjs', 'index:build', 'karmaconfig',
-    'karma:continuous' 
+    'copy:build_appjs', 'copy:build_vendorjs', 'index:build'
   ]);
 
   /**
@@ -618,17 +617,7 @@ module.exports = function ( grunt ) {
    * compiled as grunt templates for use by Karma. Yay!
    */
   grunt.registerMultiTask( 'karmaconfig', 'Process karma config templates', function () {
-    var jsFiles = filterForJS( this.filesSrc );
-    
-    grunt.file.copy( 'karma/karma-unit.tpl.js', grunt.config( 'build_dir' ) + '/karma-unit.js', { 
-      process: function ( contents, path ) {
-        return grunt.template.process( contents, {
-          data: {
-            scripts: jsFiles
-          }
-        });
-      }
-    });
+  
   });
 
 };

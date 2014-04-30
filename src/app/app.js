@@ -1,8 +1,10 @@
-angular.module( 'ngBoilerplate', [
+angular.module( 'ngZoute', [
   'templates-app',
   'templates-common',
-  'ngBoilerplate.home',
-  'ngBoilerplate.about',
+  'ngZoute.home',
+  'ngZoute.about',
+  'ngZoute.signup',
+  'ngZoute.login',
   'ui.router'
 ])
 
@@ -10,13 +12,18 @@ angular.module( 'ngBoilerplate', [
   $urlRouterProvider.otherwise( '/home' );
 })
 
+.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.useXDomain = true;
+    }
+])
+
 .run( function run () {
 })
 
-.controller( 'AppCtrl', function AppCtrl ( $scope, $location ) {
+.controller( 'AppCtrl', function AppCtrl ( $scope ) {
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     if ( angular.isDefined( toState.data.pageTitle ) ) {
-      $scope.pageTitle = toState.data.pageTitle + ' | ngBoilerplate' ;
+      $scope.pageTitle = toState.data.pageTitle + ' | Zoute' ;
     }
   });
 })
