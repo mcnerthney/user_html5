@@ -1,12 +1,95 @@
-<div class="jumbotron">
-  <h1>Zoute</h1>  
   <div ng-show="isActive">
-      <p> User: {{ user.email }} </p>
-      <button ng-click='logout()'>Logout</button>
+    <div class="row">
+        <div class="col-sm-2"></div> 
+        <div class="col-sm-8 text-right"> 
+            <p> User: {{ user.email }} </p>
+         </div>
+        <button class="col-sm-2" ng-click='logout()'>Logout</button>
+    </div>
+  </div>  
+
+
+  <div class="row">
+      <h2 class="text-center">Zoute Mobile Ticket Agency Dashboard</h2>
   </div>
+
+  <div class="container" > 
+      <div class="row">
+          <div  ng-repeat="tab in tabs" >
+           <button type="button" class="btn btn-default col-sm-3" 
+               ng-class="{active: activetab == tab.name}" ng-click="setTab(tab.name)">{{tab.name}}</button>
+          </div>
+      </div>
+      <div class="row" ng-show="activetab == 'Rider Meterics'">
+          <h2>Rider Meterics</h2>
+          <div class="row">
+                <div google-chart chart="riderMetrics" style="width:1024px; height:512px; position: relative;">
+                    
+                </div>
+        
+          </div>
+      </div>
+      <div class="row" ng-show="activetab == 'Transaction Meterics'">
+          <h2>Transaction Meterics</h2>
+          <div class="row">
+                <div google-chart chart="trxMetrics" style="width:1024px; height:512px; position: relative;">
+                    
+                </div>
+        
+          </div>
+          
+      </div>
+      <div class="row" ng-show="activetab == 'Ticket Types'">
+          <h2>Ticket Types</h2>
+          <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-right">Name</th>
+                    <th class="text-right">Description</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="ticket in tickets" >
+                    <td class="text-right">{{ticket.name}}</td>
+                    <td class="text-right">{{ticket.description}}</td>
+                    <td class="text-right">{{ticket.price | currency }}</td>
+                    <td class="text-right">{{ticket.category}}</td>
+                  </tr>
+              </tbody>
+         </table>
+      </div>
+      <div class="row" ng-show="activetab == 'Transactions'">
+          <h2>Transactions</h2>
+          <table class="table">
+                <thead>
+                  <tr>
+                    <th class="text-right">Name</th>
+                    <th class="text-right">Description</th>
+                    <th class="text-right">Issued Timestamp</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Category</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="trx in transactions" >
+                    <td class="text-right">{{trx.ticket.name}}</td>
+                    <td class="text-right">{{trx.ticket.description}}</td>
+                    <td class="text-right">{{trx.time}}</td>
+                    <td class="text-right">{{trx.ticket.price | currency }}</td>
+                    <td class="text-right">{{trx.ticket.category}}</td>
+                  </tr>
+              </tbody>
+         </table>
+      </div>
+      
+      
+
+
   <div ng-show=!isActive>
       <button ng-click='signup()'>Sign Up</button>
       <button ng-click='login()'>Login</button>
   </div>
-</div>
+
 

@@ -8,7 +8,8 @@
     "angular-bootstrap": "~0.10.0",
     "angular-ui-router": "~0.2",
     "angular-resource": "~1.2",
-    "ngstorage": "~0.3.0"
+    "ngstorage": "~0.3.0",
+    "angular-google-chart": "~0.0.9"
   },
   "dependencies": {}
 }

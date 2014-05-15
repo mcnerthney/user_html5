@@ -54,7 +54,10 @@ angular.module( 'ngZoute.service', [
         profile: function() {
             
             var deferred = $q.defer();
+            deferred.resolve({code: 0, users: [ { email: "agency@example.com" } ] } );
             
+            return deferred.promise;
+            /*
             $http.get( server + '/user?access=' + $localStorage.access
                    ).success(function (data, status, headers, config) {
                        console.log(data);
@@ -71,7 +74,7 @@ angular.module( 'ngZoute.service', [
                    });
                    
             return deferred.promise;
-            
+            */
         },
         register: function(email,password) {
             
@@ -157,7 +160,8 @@ angular.module( 'ngZoute.home', [
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'HomeCtrl', [ '$scope', '$location', '$localStorage', 'User', function HomeController( $scope, $location, $localStorage, User ) {
+.controller( 'HomeCtrl', [ '$rootScope','$scope', '$location', '$localStorage', 'User', 
+    function HomeController( $rootScope, $scope, $location, $localStorage, User ) {
     
     User.profile().then(
        function success(data) {
@@ -167,8 +171,33 @@ angular.module( 'ngZoute.home', [
        function fail(data) {
            $scope.isActive = false;
            $scope.user = {};
-       });
-        
+       }) ;
+       
+    $scope.tabs = [
+           {name:'Transactions'},
+           {name:'Rider Meterics'},
+           {name:'Transaction Meterics'},
+           {name:'Ticket Types'}
+    ];  
+    $scope.activetab = "Transactions";
+    
+    $scope.tickets = [
+       {id: '1', name:'Single Ride', description: 'Valid for 1 ride', price: 2.50, category: 'Adult'},
+       {id: '2', name:'Express Ride', description: 'Valid for 1 ride', price: 5.50, category: 'Adult'},
+       {id: '3', name:'Day Pass', description: 'Valid for 1 day', price: 7.50, category: 'Adult'},
+       {id: '4', name:'Day Pass', description: 'Valid for 1 day', price: 7.50, category: 'Youth'}
+    ]; 
+    
+    $scope.transactions = [
+       {id: '1', time: '18:05  5/15/14', ticket: $scope.tickets[0] },
+       {id: '1', time: '18:02  5/15/14', ticket: $scope.tickets[2] },
+       {id: '1', time: '17:56  5/15/14', ticket: $scope.tickets[0] },
+       {id: '1', time: '17:50  5/15/14', ticket: $scope.tickets[2] },
+       {id: '1', time: '17:47  5/15/14', ticket: $scope.tickets[3] },
+       {id: '1', time: '17:40  5/15/14', ticket: $scope.tickets[0] }              
+    ]; 
+
+
     $scope.submit = function() {
         
     };
@@ -191,11 +220,248 @@ angular.module( 'ngZoute.home', [
           function fail(data) {
           });
    };
+   $scope.setTab = function(tab) {
+       console.log(tab);
+       $scope.activetab = tab;
+       $rootScope.$emit('resizeMsg');
+   };
    
+   $scope.riderMetrics = {
+     "type": "AreaChart",
+     "displayed": true,
+     "data": {
+       "cols": [
+         {
+           "id": "month",
+           "label": "Month",
+           "type": "string",
+           "p": {}
+         },
+         {
+           "id": "laptop-id",
+           "label": "Laptop",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "desktop-id",
+           "label": "Desktop",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "server-id",
+           "label": "Server",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "cost-id",
+           "label": "Shipping",
+           "type": "number"
+         }
+       ],
+       "rows": [
+         {
+           "c": [
+             {
+               "v": "January"
+             },
+             {
+               "v": 19,
+               "f": "42 items"
+             },
+             {
+               "v": 12,
+               "f": "Ony 12 items"
+             },
+             {
+               "v": 7,
+               "f": "7 servers"
+             },
+             {
+               "v": 4
+             }
+           ]
+         },
+         {
+           "c": [
+             {
+               "v": "February"
+             },
+             {
+               "v": 13
+             },
+             {
+               "v": 1,
+               "f": "1 unit (Out of stock this month)"
+             },
+             {
+               "v": 12
+             },
+             {
+               "v": 2
+             }
+           ]
+         },
+         {
+           "c": [
+             {
+               "v": "March"
+             },
+             {
+               "v": 24
+             },
+             {
+               "v": 5
+             },
+             {
+               "v": 11
+             },
+             {
+               "v": 6
+             }
+           ]
+         }
+       ]
+     },
+     "options": {
+       "title": "Sales per month",
+       "isStacked": "true",
+       "fill": 20,
+       "displayExactValues": true,
+       "vAxis": {
+         "title": "Sales unit",
+         "gridlines": {
+           "count": 10
+         }
+       },
+       "hAxis": {
+         "title": "Date"
+       }
+     },
+     "formatters": {}
+   };
+
+     
    
-   
-   
-    
-    
+   $scope.trxMetrics = {
+     "type": "AreaChart",
+     "displayed": true,
+     "data": {
+       "cols": [
+         {
+           "id": "month",
+           "label": "Month",
+           "type": "string",
+           "p": {}
+         },
+         {
+           "id": "laptop-id",
+           "label": "Laptop",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "desktop-id",
+           "label": "Desktop",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "server-id",
+           "label": "Server",
+           "type": "number",
+           "p": {}
+         },
+         {
+           "id": "cost-id",
+           "label": "Shipping",
+           "type": "number"
+         }
+       ],
+       "rows": [
+         {
+           "c": [
+             {
+               "v": "January"
+             },
+             {
+               "v": 19,
+               "f": "42 items"
+             },
+             {
+               "v": 12,
+               "f": "Ony 12 items"
+             },
+             {
+               "v": 7,
+               "f": "7 servers"
+             },
+             {
+               "v": 4
+             }
+           ]
+         },
+         {
+           "c": [
+             {
+               "v": "February"
+             },
+             {
+               "v": 13
+             },
+             {
+               "v": 1,
+               "f": "1 unit (Out of stock this month)"
+             },
+             {
+               "v": 12
+             },
+             {
+               "v": 2
+             }
+           ]
+         },
+         {
+           "c": [
+             {
+               "v": "March"
+             },
+             {
+               "v": 24
+             },
+             {
+               "v": 5
+             },
+             {
+               "v": 11
+             },
+             {
+               "v": 6
+             }
+           ]
+         }
+       ]
+     },
+     "options": {
+       "title": "Sales per month",
+       "isStacked": "true",
+       "fill": 20,
+       "displayExactValues": true,
+       "vAxis": {
+         "title": "Sales unit",
+         "gridlines": {
+           "count": 10
+         }
+       },
+       "hAxis": {
+         "title": "Date"
+       }
+     },
+     "formatters": {}
+   };
+
+     
 }]);
 
