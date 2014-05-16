@@ -7,7 +7,7 @@ angular.module( 'ngZoute.service', [
 .factory('User', ['$http', '$localStorage', '$q', function($http, $localStorage, $q) {
     var self = this;
     
-    var server = 'http://107.170.35.252';
+    var server = 'http://107.170.76.249:8080/';
     return {
         isActive: false,
         logout: function() {
@@ -54,10 +54,10 @@ angular.module( 'ngZoute.service', [
         profile: function() {
             
             var deferred = $q.defer();
-            deferred.resolve({code: 0, users: [ { email: "agency@example.com" } ] } );
+            //deferred.resolve({code: 0, users: [ { email: "agency@example.com" } ] } );
             
-            return deferred.promise;
-            /*
+            //return deferred.promise;
+  
             $http.get( server + '/user?access=' + $localStorage.access
                    ).success(function (data, status, headers, config) {
                        console.log(data);
@@ -74,7 +74,7 @@ angular.module( 'ngZoute.service', [
                    });
                    
             return deferred.promise;
-            */
+     
         },
         register: function(email,password) {
             
@@ -166,7 +166,8 @@ angular.module( 'ngZoute.home', [
     User.profile().then(
        function success(data) {
            $scope.isActive = true;
-           $scope.user = data.users[0];
+           $scope.user = data.user;
+           $scope.agency = { name: "ETF" };
        },
        function fail(data) {
            $scope.isActive = false;
@@ -175,8 +176,8 @@ angular.module( 'ngZoute.home', [
        
     $scope.tabs = [
            {name:'Transactions'},
-           {name:'Rider Meterics'},
-           {name:'Transaction Meterics'},
+           {name:'Rider Metrics'},
+           {name:'Transaction Metrics'},
            {name:'Ticket Types'}
     ];  
     $scope.activetab = "Transactions";

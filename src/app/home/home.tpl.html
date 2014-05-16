@@ -1,38 +1,48 @@
-  <div ng-show="isActive">
+  <div >
     <div class="row">
-        <div class="col-sm-2"></div> 
-        <div class="col-sm-8 text-right"> 
-            <p> User: {{ user.email }} </p>
-         </div>
-        <button class="col-sm-2" ng-click='logout()'>Logout</button>
+        <div class="col-sm-6">
+            <h2 class="text-center">Zoute Mobile</h2>
+            <h2 ng-show="isActive" class="text-center">{{agency.name}} Agency Dashboard</h2>
+        </div> 
+        <div ng-show="isActive">
+            <div class="col-sm-4 text-right"> 
+               <p> User: {{ user.email }} </p>
+            </div>
+           <button class="col-sm-2" ng-click='logout()'>Logout</button>
+        </div>
+        <div ng-show="!isActive">
+            <div class="col-sm-2"></div> 
+            <button  class="col-sm-2" ng-click='signup()'>Sign Up</button>
+            <button  class="col-sm-2" ng-click='login()'>Login</button>
+        </div>
+        
     </div>
   </div>  
 
 
+
   <div class="row">
-      <h2 class="text-center">Zoute Mobile Ticket Agency Dashboard</h2>
+
   </div>
 
-  <div class="container" > 
+  <div ng-show="isActive" class="container" > 
       <div class="row">
           <div  ng-repeat="tab in tabs" >
            <button type="button" class="btn btn-default col-sm-3" 
                ng-class="{active: activetab == tab.name}" ng-click="setTab(tab.name)">{{tab.name}}</button>
           </div>
       </div>
-      <div class="row" ng-show="activetab == 'Rider Meterics'">
-          <h2>Rider Meterics</h2>
-          <div class="row">
-                <div google-chart chart="riderMetrics" style="width:1024px; height:512px; position: relative;">
-                    
+      <div class="row" ng-show="activetab == 'Rider Metrics'">
+          <h2>Rider Metrics</h2>
+          <div >
+                <div google-chart chart="riderMetrics" style="width:980px; height:512px; position: relative;">                    
                 </div>
-        
           </div>
       </div>
-      <div class="row" ng-show="activetab == 'Transaction Meterics'">
-          <h2>Transaction Meterics</h2>
+      <div class="row" ng-show="activetab == 'Transaction Metrics'">
+          <h2>Transaction Metrics</h2>
           <div class="row">
-                <div google-chart chart="trxMetrics" style="width:1024px; height:512px; position: relative;">
+                <div google-chart chart="trxMetrics" style="width:980px; height:512px; position: relative;">
                     
                 </div>
         
@@ -83,13 +93,7 @@
               </tbody>
          </table>
       </div>
-      
-      
-
-
-  <div ng-show=!isActive>
-      <button ng-click='signup()'>Sign Up</button>
-      <button ng-click='login()'>Login</button>
   </div>
-
+  
+  
 
