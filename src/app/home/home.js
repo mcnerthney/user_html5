@@ -189,6 +189,19 @@ angular.module( 'ngZoute.home', [
        {id: '4', name:'Day Pass', description: 'Valid for 1 day', price: 7.50, category: 'Youth'}
     ]; 
     
+    $scope.ticketOptions = { data: 'tickets' };
+
+    $scope.trxOptions = { 
+        data: 'transactions',
+        columnDefs: [
+            {field:'ticket.name',        displayName:'Name'},
+            {field:'ticket.description', displayName:'Description'},  
+            {field:'time',               displayName:'Issued Timestamp'},
+            {field:'ticket.price',       displayName:'Price', cellTemplate: '<div>{{row.getProperty(col.field) | currency }}</div>' },
+            {field:'ticket.category',    displayName:'Category'}
+        ]
+    };
+    
     $scope.transactions = [
        {id: '1', time: '18:05  5/15/14', ticket: $scope.tickets[0] },
        {id: '1', time: '18:02  5/15/14', ticket: $scope.tickets[2] },

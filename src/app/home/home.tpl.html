@@ -33,8 +33,8 @@
           </div>
       </div>
       <div class="row" ng-show="activetab == 'Rider Metrics'">
-          <h2>Rider Metrics</h2>
-          <div >
+          <h2>Rider Meterics</h2>
+          <div>
                 <div google-chart chart="riderMetrics" style="width:980px; height:512px; position: relative;">                    
                 </div>
           </div>
@@ -42,57 +42,24 @@
       <div class="row" ng-show="activetab == 'Transaction Metrics'">
           <h2>Transaction Metrics</h2>
           <div class="row">
-                <div google-chart chart="trxMetrics" style="width:980px; height:512px; position: relative;">
-                    
+                <div google-chart chart="trxMetrics" style="width:980px; height:512px; position: relative;">        
                 </div>
-        
           </div>
           
       </div>
       <div class="row" ng-show="activetab == 'Ticket Types'">
-          <h2>Ticket Types</h2>
-          <table class="table">
-                <thead>
-                  <tr>
-                    <th class="text-right">Name</th>
-                    <th class="text-right">Description</th>
-                    <th class="text-right">Price</th>
-                    <th class="text-right">Category</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="ticket in tickets" >
-                    <td class="text-right">{{ticket.name}}</td>
-                    <td class="text-right">{{ticket.description}}</td>
-                    <td class="text-right">{{ticket.price | currency }}</td>
-                    <td class="text-right">{{ticket.category}}</td>
-                  </tr>
-              </tbody>
-         </table>
-      </div>
+          <h2>Ticket Types</h2>    
+          <div class="row">
+              <div class="ticketGridStyle" ng-grid="ticketOptions"></div>
+          </div>
+       </div>
       <div class="row" ng-show="activetab == 'Transactions'">
           <h2>Transactions</h2>
-          <table class="table">
-                <thead>
-                  <tr>
-                    <th class="text-right">Name</th>
-                    <th class="text-right">Description</th>
-                    <th class="text-right">Issued Timestamp</th>
-                    <th class="text-right">Price</th>
-                    <th class="text-right">Category</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="trx in transactions" >
-                    <td class="text-right">{{trx.ticket.name}}</td>
-                    <td class="text-right">{{trx.ticket.description}}</td>
-                    <td class="text-right">{{trx.time}}</td>
-                    <td class="text-right">{{trx.ticket.price | currency }}</td>
-                    <td class="text-right">{{trx.ticket.category}}</td>
-                  </tr>
-              </tbody>
-         </table>
-      </div>
+          <div class="row">
+              <div class="ticketGridStyle" ng-grid="trxOptions"></div>
+          </div>
+                                                                                     
+       </div>
   </div>
   
   

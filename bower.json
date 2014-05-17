@@ -9,7 +9,9 @@
     "angular-ui-router": "~0.2",
     "angular-resource": "~1.2",
     "ngstorage": "~0.3.0",
-    "angular-google-chart": "~0.0.9"
+    "angular-google-chart": "~0.0.9",
+    "ng-grid": "~2.0.11",
+    "jquery": "~2.1.1"
   },
   "dependencies": {}
 }
