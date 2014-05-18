@@ -370,16 +370,13 @@ angular.module( 'ngZoute.home', [
                "v": "January"
              },
              {
-               "v": 19,
-               "f": "42 items"
+               "v": 19
              },
              {
-               "v": 12,
-               "f": "Ony 12 items"
+               "v": 12
              },
              {
-               "v": 7,
-               "f": "7 servers"
+               "v": 7
              }
            ]
          },
@@ -392,8 +389,7 @@ angular.module( 'ngZoute.home', [
                "v": 13
              },
              {
-               "v": 1,
-               "f": "1 unit (Out of stock this month)"
+               "v": 1
              },
              {
                "v": 12
