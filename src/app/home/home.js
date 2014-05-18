@@ -30,7 +30,7 @@ angular.module( 'ngZoute.service', [
 
 .factory('User', ['$http', '$localStorage', '$q', function($http, $localStorage, $q) {
   
-    var server = 'http://127.0.0.1:5000/';//'http://107.170.76.249:8080/';
+    var server = 'http://107.170.76.249:8080/';
     return {
         logout: function() {
             var deferred = $q.defer();
@@ -227,6 +227,19 @@ angular.module( 'ngZoute.home', [
         
     $scope.agencies = Agency.data.agencies;
     
+    function pingTrxs() {
+        if ( $scope.activetab === "Transactions" ) {
+            User.agency_ticket_transactions($scope.agency_id).then(
+               function success(tickets) {
+                   angular.copy(tickets,$scope.transactions);
+               }
+           );
+        }
+        setTimeout(pingTrxs, 1000);   
+    }    
+    pingTrxs();
+    
+    
     Agency.fetchAll().then(function success(data) 
         { 
             User.profile().then(
@@ -244,11 +257,6 @@ angular.module( 'ngZoute.home', [
         });
     
     function loadAgency(agency_id) {
-        User.agency_ticket_transactions(agency_id).then(
-               function success(tickets) {
-                   angular.copy(tickets,$scope.transactions);
-               }
-           );
            User.agency_ticket_type(agency_id).then(
                   function success(tickets) {
                       angular.copy(tickets,$scope.tickets);
