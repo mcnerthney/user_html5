@@ -1,8 +1,7 @@
   <div >
     <div class="row">
         <div class="col-sm-6">
-            <h2 class="text-center">Zoute Mobile</h2>
-            <h2 ng-show="isActive" class="text-center">{{agency.name}} Agency Dashboard</h2>
+            <h2 class="text-center">Zoute {{agency.agency_name}} Agency Dashboard</h2>
         </div> 
         <div ng-show="isActive">
             <div class="col-sm-4 text-right"> 
@@ -25,7 +24,7 @@
 
   </div>
 
-  <div ng-show="isActive" class="container" > 
+  <div ng-show="isActive && agency.agency_id" class="container" > 
       <div class="row">
           <div  ng-repeat="tab in tabs" >
            <button type="button" class="btn btn-default col-sm-3" 

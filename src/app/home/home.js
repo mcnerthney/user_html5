@@ -3,21 +3,41 @@ angular.module( 'ngZoute.service', [
 'ngStorage'
 ])
 
+.factory('Agency', ['$http', '$q', function($http, $q) {
+    var _server = 'https://api.zoute.me/';
+    var _data = {
+        agencies: []
+    };
+    return {
+        data: _data,
+        fetchAll: function() {
+            var deferred = $q.defer();
+            $http.get( _server + "agency/all"  
+                   ).success(function (data, status, headers, config) {
+                       if ( data && data.code === 0 ) {
+                           angular.copy(data.agencies,_data.agencies);
+                           deferred.resolve();
+                           return;
+                       }
+                       deferred.reject(data.code);
+                   }).error(function (data, status, headers, config) {
+                       deferred.reject(-1);
+                   });         
+            return deferred.promise;
+        }
+    };
+}])
 
 .factory('User', ['$http', '$localStorage', '$q', function($http, $localStorage, $q) {
-    var self = this;
-    
-    var server = 'http://107.170.76.249:8080/';
+  
+    var server = 'http://127.0.0.1:5000/';//'http://107.170.76.249:8080/';
     return {
-        isActive: false,
         logout: function() {
             var deferred = $q.defer();
             var access = $localStorage.access;
             /* jshint -W024 */
             $http.delete( server + "/session?access=" + access  
                    ).success(function (data, status, headers, config) {
-                       console.log(data);
-                       self.isActive = false;
                        delete $localStorage.access;
                        deferred.resolve();
                    }).error(function (data, status, headers, config) {
@@ -32,11 +52,8 @@ angular.module( 'ngZoute.service', [
             var deferred = $q.defer();
             
             $http.post( server + '/session', { email: email, password: password }
-                   ).success(function (data, status, headers, config) {
-                       console.log(data);
-                       
+                   ).success(function (data, status, headers, config) {                       
                        if ( data.code === 0 )  {
-                           self.isActive = false;
                            $localStorage.access = data.access;
                            deferred.resolve();
                            return;
@@ -54,13 +71,9 @@ angular.module( 'ngZoute.service', [
         profile: function() {
             
             var deferred = $q.defer();
-            //deferred.resolve({code: 0, users: [ { email: "agency@example.com" } ] } );
-            
-            //return deferred.promise;
-  
             $http.get( server + '/user?access=' + $localStorage.access
                    ).success(function (data, status, headers, config) {
-                       console.log(data);
+
                        
                        if ( data.code === 0 )  {
                            deferred.resolve(data);
@@ -81,11 +94,8 @@ angular.module( 'ngZoute.service', [
             var deferred = $q.defer();
             
             $http.post( server + '/user', { email: email, password: password }
-                   ).success(function (data, status, headers, config) {
-                       console.log(data);
-                       
+                   ).success(function (data, status, headers, config) {                       
                        if ( data.code === 0 )  {
-                           self.isActive = false;
                            $localStorage.access = data.access;
                            deferred.resolve();
                            return;
@@ -99,7 +109,59 @@ angular.module( 'ngZoute.service', [
                    
             return deferred.promise;
             
+        },
+        agency_ticket_transactions: function(agency_id) {
+            
+            var deferred = $q.defer();
+            
+            $http.get( server + '/agency/' + agency_id + '/ticket?access=' + $localStorage.access
+                   ).success(function (data, status, headers, config) {                       
+                       if ( data.code === 0 )  {
+                           var out = [];
+                           for ( var i = 0; i < data.tickets.length; i++) {
+                               out = data.tickets[i];
+                               out.issued_date = new Date(out.issued_timestamp*1000);
+                               out.price_dollars = out.ticket_price / 100;
+                           }
+                           deferred.resolve(data.tickets);
+                           return;
+                       }
+                       
+                       deferred.reject(data.code);
+                       
+                   }).error(function (data, status, headers, config) {
+                       deferred.reject(-1);
+                   });
+                   
+            return deferred.promise;
+            
+        },
+        agency_ticket_type: function(agency_id) {
+            
+            var deferred = $q.defer();
+            
+            $http.get( server + '/ticket/types/' + agency_id 
+                   ).success(function (data, status, headers, config) {                       
+                       if ( data.code === 0 )  {
+                           for ( var i = 0; i < data.ticket_types.length; i++) {
+                               var out = data.ticket_types[i];
+                               out.price_dollars = out.ticket_price / 100;
+                           }
+                           deferred.resolve(data.ticket_types);
+                           return;
+                       }
+                       
+                       deferred.reject(data.code);
+                       
+                   }).error(function (data, status, headers, config) {
+                       deferred.reject(-1);
+                   });
+                   
+            return deferred.promise;
+            
         }
+        
+        
     };
 }]);
 
@@ -160,19 +222,50 @@ angular.module( 'ngZoute.home', [
 /**
  * And of course we define a controller for our route.
  */
-.controller( 'HomeCtrl', [ '$rootScope','$scope', '$location', '$localStorage', 'User', 
-    function HomeController( $rootScope, $scope, $location, $localStorage, User ) {
+.controller( 'HomeCtrl', [ '$rootScope','$scope', '$location', '$localStorage', 'User', 'Agency', 
+    function HomeController( $rootScope, $scope, $location, $localStorage, User, Agency ) {
+        
+    $scope.agencies = Agency.data.agencies;
     
-    User.profile().then(
-       function success(data) {
-           $scope.isActive = true;
-           $scope.user = data.user;
-           $scope.agency = { name: "ETF" };
-       },
-       function fail(data) {
-           $scope.isActive = false;
-           $scope.user = {};
-       }) ;
+    Agency.fetchAll().then(function success(data) 
+        { 
+            User.profile().then(
+               function success(data) {
+                   $scope.isActive = true;
+                   $scope.user = data.user;
+                   $scope.agency_id = data.user.agency_access.length > 0 ? data.user.agency_access[0].agency_id : undefined;
+                   $scope.agency = loadAgency($scope.agency_id);
+               },
+               function fail(data) {
+                   $scope.isActive = false;
+                   $scope.user = {};
+               }) ;
+            
+        });
+    
+    function loadAgency(agency_id) {
+        User.agency_ticket_transactions(agency_id).then(
+               function success(tickets) {
+                   angular.copy(tickets,$scope.transactions);
+               }
+           );
+           User.agency_ticket_type(agency_id).then(
+                  function success(tickets) {
+                      angular.copy(tickets,$scope.tickets);
+                  }
+              );
+    
+        
+        for (var i = 0; i < $scope.agencies.length; i++) { 
+            var agency = $scope.agencies[i];
+            if ( agency.agency_id === agency_id ) {
+                return agency;
+            }
+        }
+        return {};
+    }
+    
+    $scope.isActive = false;
        
     $scope.tabs = [
            {name:'Transactions'},
@@ -189,27 +282,27 @@ angular.module( 'ngZoute.home', [
        {id: '4', name:'Day Pass', description: 'Valid for 1 day', price: 7.50, category: 'Youth'}
     ]; 
     
-    $scope.ticketOptions = { data: 'tickets' };
+    $scope.ticketOptions = { data: 'tickets',
+        columnDefs: [
+            {field:'ticket_name',        displayName:'Name'},
+            {field:'ticket_description', displayName:'Description'},  
+            {field:'price_dollars',       displayName:'Price', cellTemplate: '<div class="ngCellText">{{row.getProperty(col.field) | currency }}</div>' },
+            {field:'ticket_category_name',    displayName:'Category'}
+        ]
+     };
 
     $scope.trxOptions = { 
         data: 'transactions',
         columnDefs: [
-            {field:'ticket.name',        displayName:'Name'},
-            {field:'ticket.description', displayName:'Description'},  
-            {field:'time',               displayName:'Issued Timestamp'},
-            {field:'ticket.price',       displayName:'Price', cellTemplate: '<div>{{row.getProperty(col.field) | currency }}</div>' },
-            {field:'ticket.category',    displayName:'Category'}
+            {field:'issued_date',               displayName:'Issued Timestamp', cellTemplate: '<div class="ngCellText">{{row.getProperty(col.field) | date:"short" }}</div>' },
+            {field:'ticket_name',        displayName:'Name'},
+            {field:'ticket_description', displayName:'Description'},  
+            {field:'price_dollars',       displayName:'Price', cellTemplate: '<div class="ngCellText">{{row.getProperty(col.field) | currency }}</div>' },
+            {field:'ticket_category_name',    displayName:'Category'}
         ]
     };
     
-    $scope.transactions = [
-       {id: '1', time: '18:05  5/15/14', ticket: $scope.tickets[0] },
-       {id: '1', time: '18:02  5/15/14', ticket: $scope.tickets[2] },
-       {id: '1', time: '17:56  5/15/14', ticket: $scope.tickets[0] },
-       {id: '1', time: '17:50  5/15/14', ticket: $scope.tickets[2] },
-       {id: '1', time: '17:47  5/15/14', ticket: $scope.tickets[3] },
-       {id: '1', time: '17:40  5/15/14', ticket: $scope.tickets[0] }              
-    ]; 
+    $scope.transactions = []; 
 
 
     $scope.submit = function() {
@@ -253,26 +346,21 @@ angular.module( 'ngZoute.home', [
          },
          {
            "id": "laptop-id",
-           "label": "Laptop",
+           "label": "Adult",
            "type": "number",
            "p": {}
          },
          {
            "id": "desktop-id",
-           "label": "Desktop",
+           "label": "Child",
            "type": "number",
            "p": {}
          },
          {
            "id": "server-id",
-           "label": "Server",
+           "label": "Senior",
            "type": "number",
            "p": {}
-         },
-         {
-           "id": "cost-id",
-           "label": "Shipping",
-           "type": "number"
          }
        ],
        "rows": [
@@ -292,9 +380,6 @@ angular.module( 'ngZoute.home', [
              {
                "v": 7,
                "f": "7 servers"
-             },
-             {
-               "v": 4
              }
            ]
          },
@@ -312,9 +397,6 @@ angular.module( 'ngZoute.home', [
              },
              {
                "v": 12
-             },
-             {
-               "v": 2
              }
            ]
          },
@@ -331,21 +413,18 @@ angular.module( 'ngZoute.home', [
              },
              {
                "v": 11
-             },
-             {
-               "v": 6
              }
            ]
          }
        ]
      },
      "options": {
-       "title": "Sales per month",
+       "title": "Rider per month",
        "isStacked": "true",
        "fill": 20,
        "displayExactValues": true,
        "vAxis": {
-         "title": "Sales unit",
+         "title": "Rider category",
          "gridlines": {
            "count": 10
          }
