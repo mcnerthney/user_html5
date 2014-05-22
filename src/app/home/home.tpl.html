@@ -11,7 +11,6 @@
         </div>
         <div ng-show="!isActive">
             <div class="col-sm-2"></div> 
-            <button  class="col-sm-2" ng-click='signup()'>Sign Up</button>
             <button  class="col-sm-2" ng-click='login()'>Login</button>
         </div>
         
@@ -31,15 +30,44 @@
                ng-class="{active: activetab == tab.name}" ng-click="setTab(tab.name)">{{tab.name}}</button>
           </div>
       </div>
-      <div class="row" ng-show="activetab == 'Rider Metrics'">
-          <h2>Rider Meterics</h2>
-          <div>
+      <div class="row">
+         <h2 class="center-y col-sm-3">{{activetab}}</h2>
+         <div ng-show="activetab === 'Transactions' || activetab === 'Ticket Metrics'">
+
+
+           <div class="col-sm-6 grouping-buttons">
+            <input class="date-range-input" type="daterange" ng-model="trxDateRange"></input>
+          <button type="button" class="header btn btn-default" ng-csv="cvsExportData()" csv-header="cvsExportHeader()" filename="ZouteTransactions.csv">Export</button>
+          </div>
+         </div>
+      </div>
+      <div class="row">
+           <div ng-show="activetab === 'Ticket Metrics'" class="btn-group">
+              <button type="button" value="5"   class="btn btn-default"  ng-class="{active: activegroup == 'Day'}" ng-click="clickGroup('Day')">Day</button>
+              <button type="button" value="10"   class="btn btn-default"  ng-class="{active: activegroup == 'Week'}" ng-click="clickGroup('Week')" >Week</button>
+              <button type="button" value="15"   class="btn btn-default"  ng-class="{active: activegroup == 'Month'}" ng-click="clickGroup('Month')">Month</button>
+          </div>
+           <div ng-show="activetab === 'Ticket Metrics'" class="btn-group">
+              <button type="button" value="5"   class="btn btn-default"  ng-class="{active: activesum == 'Count'}" ng-click="clickSum('Count')">Count</button>
+              <button type="button" value="10"   class="btn btn-default"  ng-class="{active: activesum == 'Price'}" ng-click="clickSum('Price')" >Price</button>
+          </div>
+           <div ng-show="activetab === 'Ticket Metrics'" class="btn-group">
+              <button type="button" value="5"   class="btn btn-default"  ng-class="{active: activetype == 'Ticket Type'}" ng-click="clickType('Ticket Type')">Ticket Type</button>
+              <button type="button" value="10"   class="btn btn-default"  ng-class="{active: activetype == 'Rider Age'}" ng-click="clickType('Rider Age')" >Rider Age</button>
+          </div>
+           
+           
+    </div>
+      
+      <div class="row" ng-show="activetab == 'Ticket Metrics'">
+
+          <div ng-show="activegroup">
                 <div google-chart chart="riderMetrics" style="width:980px; height:512px; position: relative;">                    
                 </div>
           </div>
       </div>
       <div class="row" ng-show="activetab == 'Transaction Metrics'">
-          <h2>Transaction Metrics</h2>
+
           <div class="row">
                 <div google-chart chart="trxMetrics" style="width:980px; height:512px; position: relative;">        
                 </div>
@@ -47,14 +75,13 @@
           
       </div>
       <div class="row" ng-show="activetab == 'Ticket Types'">
-          <h2>Ticket Types</h2>    
+  
           <div class="row">
               <div class="ticketGridStyle" ng-grid="ticketOptions"></div>
           </div>
        </div>
       <div class="row" ng-show="activetab == 'Transactions'">
-          <h2>Transactions</h2>
-          <div class="row">
+           <div class="row">
               <div class="ticketGridStyle" ng-grid="trxOptions"></div>
           </div>
                                                                                      

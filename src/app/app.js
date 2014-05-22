@@ -6,8 +6,11 @@ angular.module( 'ngZoute', [
   'ngZoute.signup',
   'ngZoute.login',
   'ui.router',
+  'ngSanitize',
   'googlechart',
-  'ngGrid'
+  'ngBootstrap',
+  'ngGrid',
+  'ngCsv'
 ])
 
 .config( function myAppConfig ( $stateProvider, $urlRouterProvider ) {

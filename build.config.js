@@ -65,16 +65,25 @@ module.exports = {
       'vendor/jquery/dist/jquery.js',
       'vendor/angular/angular.js',  
       'vendor/angular-resource/angular-resource.js',
+      'vendor/angular-sanitize/angular-sanitize.js',
+      'vendor/seedrandom/seedrandom.js',
+      'vendor/underscore/underscore.js',
+      'vendor/momentjs/moment.js',
       'vendor/ngstorage/ngStorage.js',
       'vendor/angular-bootstrap/ui-bootstrap-tpls.min.js',
       'vendor/placeholders/angular-placeholders-0.0.1-SNAPSHOT.min.js',
       'vendor/angular-ui-router/release/angular-ui-router.js',
       'vendor/angular-ui-utils/modules/route/route.js',
-      'vendor/ng-grid/ng-grid-2.0.11.min.js',
-      'vendor/angular-google-chart/ng-google-chart.js'
+      'vendor/ng-grid/build/ng-grid.js',
+      'vendor/ng-csv/build/ng-csv.js',
+      'vendor/angular-google-chart/ng-google-chart.js',
+      'vendor/angular-bootstrap/ui-bootstrap.js',
+      'vendor/ng-bs-daterangepicker/dist/ng-bs-daterangepicker.min.js',
+      'vendor/bootstrap-daterangepicker/daterangepicker.js'
     ],
     css: [
-      'vendor/ng-grid/ng-grid.css'
+      'vendor/ng-grid/ng-grid.css',
+      'vendor/bootstrap-daterangepicker/daterangepicker-bs3.css',
     ],
     assets: [
     ]
