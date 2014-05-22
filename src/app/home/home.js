@@ -293,8 +293,9 @@ angular.module( 'ngZoute.home', [
     }    
     pingTrxs();
 
-    $scope.activetype = 'Rider Age';
+    $scope.activetype = 'Ticket Type';
     $scope.activesum = 'Count';
+
     $scope.riderChartData = null;
     function setGroup() {
 
@@ -603,12 +604,13 @@ angular.module( 'ngZoute.home', [
           });
    };
    $scope.setTab = function(tab) {
-       console.log(tab);
+       setGroup();
        $scope.activetab = tab;
        $rootScope.$emit('resizeMsg');
        if ( tab === 'Ticket Metrics' && !$scope.activegroup ) {
-           $scope.clickGroup('Day');
+           //$scope.clickGroup('Day');
        }
+
    };
  
         
@@ -798,7 +800,7 @@ angular.module( 'ngZoute.home', [
        }
      ];
      
-     $window.setTimeout( function() { setGroup(null); }, 1000);
+     $window.setTimeout( function() { $scope.activegroup = 'Week'; setGroup(); }, 1000);
      
 }]);
 
